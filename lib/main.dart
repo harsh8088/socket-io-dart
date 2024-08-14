@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:socket_samples/feeds_page.dart';
 
 import 'chat.dart';
 
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         '/chat-room': (context) => ChatPage(
               username: ModalRoute.of(context)?.settings.arguments as String,
             ),
+        '/feeds': (context) => const FeedsPage(),
       },
     );
   }
@@ -45,12 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
       body: Center(
@@ -63,7 +60,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 title: const Text('Chat'),
                 subtitle: const Text('Group Chat Sample'),
                 children: <Widget>[
-                  const SizedBox(height: 6,),
+                  const SizedBox(
+                    height: 6,
+                  ),
                   Row(
                     children: [
                       Expanded(
@@ -121,7 +120,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 6,)
+                  const SizedBox(
+                    height: 6,
+                  )
                 ],
               ),
               const SizedBox(
@@ -136,8 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onTap: () {
                       Navigator.pushNamed(
                         context,
-                        '/chat-room',
-                        arguments: _textController.text,
+                        '/feeds'
                       );
                     },
                   ),
@@ -147,7 +147,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

@@ -2,31 +2,31 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:socket_samples/widgets/chat_input.dart';
-import 'package:socket_samples/widgets/chat_list.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'model/chat_message.dart';
 
-class ChatPage extends StatefulWidget {
-  const ChatPage({super.key, required this.username});
-
-  final String username;
+class FeedsPage extends StatefulWidget {
+  const FeedsPage({super.key});
 
   @override
-  State<ChatPage> createState() => _ChatPageState();
+  State<FeedsPage> createState() => _FeedsPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _FeedsPageState extends State<FeedsPage> {
   final List<ChatMessage> _messages = List.empty(growable: true);
   late WebSocketChannel channel;
   final TextEditingController _textController = TextEditingController();
   List<String> messages = [];
 
+  late IO.Socket socket;
+  int count = 0;
+
   @override
   void initState() {
     super.initState();
-    socketConnection();
+    socketIOConnection();
   }
 
   void _newMessage(String message) {
@@ -41,7 +41,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _sendMessage(String message) {
-    var msg = {'sender': widget.username, 'body': message};
+    var msg = {'body': message};
     channel.sink.add(json.encode(msg));
   }
 
@@ -50,19 +50,13 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('Welcome ${widget.username}'),
+        title: const Text('Welcome Feeds'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Expanded(
-                child:
-                    ChatList(messages: _messages, userName: widget.username)),
-            ChatInput(
-              textController: _textController,
-              onSend: _sendMessage,
-            ),
+            Text("$count"),
           ],
         ),
       ),
@@ -71,7 +65,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void socketConnection() async {
-    final wsUrl = Uri.parse('ws://10.10.50.76:8080');
+    final wsUrl = Uri.parse('ws://10.10.50.76:8010');
     channel = WebSocketChannel.connect(wsUrl);
 
     try {
@@ -89,5 +83,39 @@ class _ChatPageState extends State<ChatPage> {
       // channel.sink.add('received!');
       // channel.sink.close(status.goingAway);
     });
+  }
+
+  void socketIOConnection() async {
+    try {
+      // socket = IO.io('http://10.10.50.76:8010');
+      // socket.open();
+      // socket.on('count', (data) {
+      //   setState(() {
+      //     count = int.parse(data);
+      //   });
+      // });
+      print("socketIOConnection");
+
+
+      socket = IO.io('http://10.10.50.76:8010');
+      socket.onConnect((_) {
+        print('connect');
+        // socket.emit('msg', 'test');
+      });
+      socket.on('count', (data) => print(data));
+      // socket.onDisconnect((_) => print('disconnect'));
+      // socket.on('fromServer', (_) => print(_));
+
+
+
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  @override
+  void dispose() {
+    socket.disconnect();
+    super.dispose();
   }
 }
