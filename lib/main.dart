@@ -135,10 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ListTile(
                     title: const Text('Socket Feeds'),
                     onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        '/feeds'
-                      );
+                      Navigator.pushNamed(context, '/feeds');
                     },
                   ),
                 ],

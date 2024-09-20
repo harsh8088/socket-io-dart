@@ -96,7 +96,6 @@ class _FeedsPageState extends State<FeedsPage> {
       // });
       print("socketIOConnection");
 
-
       socket = IO.io('http://10.10.50.76:8010');
       socket.onConnect((_) {
         print('connect');
@@ -105,9 +104,6 @@ class _FeedsPageState extends State<FeedsPage> {
       socket.on('count', (data) => print(data));
       // socket.onDisconnect((_) => print('disconnect'));
       // socket.on('fromServer', (_) => print(_));
-
-
-
     } catch (e) {
       print(e.toString());
     }
